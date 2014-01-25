@@ -39,8 +39,21 @@ class Main extends Sprite
 		
 		// Assets:
 		// nme.Assets.getBitmapData("img/assetname.jpg");
-		var bmp:Bitmap=new Bitmap(Assets.getBitmapData("img/levelback.png"));
+		
+		
+		
+		
+		var bmp:Bitmap = new Bitmap(Assets.getBitmapData("img/levelback.png"));
 		addChild(currLevelMap=bmp);
+		
+		
+		
+		addChild(player.display);
+		player.display.x = stage.stageWidth / 2 + player.display.width / 2;
+		player.display.y = stage.stageHeight - player.display.height;
+		
+		
+		
 		addEventListener(Event.ENTER_FRAME, update);
 		stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDown);
 	}
@@ -70,6 +83,7 @@ class Main extends Sprite
 		Lib.current.stage.align = flash.display.StageAlign.TOP_LEFT;
 		Lib.current.stage.scaleMode = flash.display.StageScaleMode.NO_SCALE;
 		Lib.current.addChild(new Main());
+		
 	}
 	
 	public function keyDown(e:KeyboardEvent):Void {
@@ -88,6 +102,9 @@ class Main extends Sprite
 	}
 	
 	public function update(e:Event):Void {
-		currLevelMap.x += (player.pos.x-currLevelMap.x)/3;
+		if (Math.abs(currLevelMap.x-player.pos.x)>.1){
+			currLevelMap.x += (player.pos.x - currLevelMap.x)/Math.abs(player.pos.x - currLevelMap.x) *1.5;
+		}
+		player.update(0);
 	}
 }
