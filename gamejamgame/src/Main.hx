@@ -20,7 +20,9 @@ class Main extends Sprite
 	var currLevelMap:Bitmap;
 	
 	var mLeft:Bool=false;
-	var mRight:Bool=false;
+	var mRight:Bool = false;
+	
+	var texthandler:TextHandler;
 	
 	/* ENTRY POINT */
 	
@@ -35,6 +37,7 @@ class Main extends Sprite
 		if (inited) return;
 		inited = true;
 		player = new Player();
+		texthandler = new TextHandler();
 		// (your code here)
 		
 		// Stage:
