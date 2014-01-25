@@ -3,6 +3,8 @@ package ;
 import flash.display.Bitmap;
 import flash.display.Sprite;
 import flash.events.Event;
+import flash.geom.Matrix;
+import flash.geom.Transform;
 import flash.Lib;
 import openfl.Assets;
 import flash.events.KeyboardEvent;
@@ -51,8 +53,9 @@ class Main extends Sprite
 		
 		addChild(player.display);
 		player.display.x = stage.stageWidth / 2 + player.display.width / 2;
-		player.display.y = stage.stageHeight - player.display.height;
-		
+		player.display.y = stage.stageHeight - player.display.height-20;
+		player.screenOff.x = player.display.x;
+		player.screenOff.y = player.display.y;
 		
 		
 		addEventListener(Event.ENTER_FRAME, update);
@@ -112,7 +115,8 @@ class Main extends Sprite
 		}
 		else if (e.keyCode == 65) {//a
 			mLeft = false;
-			player.pos.x=currLevelMap.x;
+			player.pos.x = currLevelMap.x;
+			player.currAnim="stand";
 		}
 		else if (e.keyCode == 83) {//s
 			
@@ -120,17 +124,28 @@ class Main extends Sprite
 		else if (e.keyCode == 68) {//d
 			mRight = false;
 			player.pos.x = currLevelMap.x;	
+			player.currAnim="stand";
 		}
 	}
 	
 	public function update(e:Event):Void {
-		if (mLeft)
-			player.pos.x += player.movespeed;
-		if (mRight)
-			player.pos.x -= player.movespeed;
-		if (Math.abs(currLevelMap.x-player.pos.x)>.1){
-			currLevelMap.x += (player.pos.x - currLevelMap.x)/Math.abs(player.pos.x - currLevelMap.x) *1.5;
+		if (mLeft) {
+			if (player.pos.x<=0)
+				player.pos.x += player.movespeed;
+				
+			player.setDirection(true);
 		}
-		player.update(0);
+		if (mRight) {
+			
+			if (player.pos.x>=-currLevelMap.width+stage.stageWidth+10)
+				player.pos.x -= player.movespeed;
+			player.setDirection(false);
+		}
+		if (mLeft || mRight) player.currAnim = "walk";
+		if (Math.abs(currLevelMap.x-player.pos.x)>.1){
+			currLevelMap.x += (player.pos.x - currLevelMap.x)/Math.abs(player.pos.x - currLevelMap.x) *2.5;
+		}
+		
+		player.update(3);
 	}
 }

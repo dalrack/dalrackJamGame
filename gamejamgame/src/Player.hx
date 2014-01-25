@@ -1,7 +1,9 @@
 package ;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
+import flash.geom.Matrix;
 import flash.geom.Point;
+import flash.geom.Transform;
 import openfl.Assets;
 
 /**
@@ -22,27 +24,33 @@ class Player
 	
 	private static var animSpeed:Int = 30;
 	private var animTTU:Int = 0;
-	public function new() 
+	
+	public var screenOff:Point;
+	public function new(animGroup:String="player") 
 	{
+		screenOff = new Point();
 		animStrings = new Array<String>();
 		animStrings.push("walk");
 		animStrings.push("stand");
+		currAnim = "stand";
 		
-		display=new Bitmap(Assets.getBitmapData("img/gradient.png"));
+		
 		pos = new Point();
 		anims = new Array<Array<BitmapData>>();
 		for (i in 0...animStrings.length) {
 			anims.push(new Array<BitmapData>());
 			var j:Int = 0;
-			var bmpdata:BitmapData = Assets.getBitmapData("img/player/"+animStrings[i]+"_"+0+".png");
+			var bmpdata:BitmapData = Assets.getBitmapData("img/"+animGroup+"/"+animStrings[i]+"_"+0+".png");
 			while (bmpdata!=null) {
 				anims[i].push(bmpdata);
 				j++;
-				if (Assets.exists("img/player/"+animStrings[i]+"_"+j+".png"))
-					bmpdata = Assets.getBitmapData("img/player/" + animStrings[i] + "_" + j + ".png");
+				if (Assets.exists("img/" + animGroup + "/" + animStrings[i] + "_" + j + ".png",AssetType.IMAGE)) {
+					bmpdata = Assets.getBitmapData("img/"+animGroup+"/" + animStrings[i] + "_" + j + ".png");
+				}
 				else bmpdata = null;
 			}
 		}
+		display=new Bitmap(anims[0][0]);
 	}
 	
 	public function searchArray(a:Array<String>, s:String):Int {
@@ -64,6 +72,17 @@ class Player
 				currFrame = 0;
 			display.bitmapData = anims[aIndex][currFrame];
 		}
+	}
+	public function setDirection(left:Bool):Void {
+		var t:Transform = display.transform;	
+		if (left) {
+			t.matrix = new Matrix( -1, 0, 0, 1,  screenOff.x+display.width / 2, t.matrix.ty);
+			
+		}
+		else {
+			t.matrix = new Matrix( 1, 0, 0, 1, screenOff.x-display.width/2 , t.matrix.ty);
+		}
+		
 	}
 	
 }
