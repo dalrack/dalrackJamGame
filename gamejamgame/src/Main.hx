@@ -9,6 +9,9 @@ import flash.Lib;
 import openfl.Assets;
 import flash.events.KeyboardEvent;
 import flash.events.MouseEvent;
+import flash.text.TextField;
+import flash.text.TextFieldAutoSize;
+import flash.text.TextFormat;
 /**
  * ...
  * @author jesus
@@ -26,6 +29,10 @@ class Main extends Sprite
 	
 	var texthandler:TextHandler;
 	
+	var editor:Bool = true;
+	
+	var drag:Sprite;
+	
 	/* ENTRY POINT */
 	
 	function resize(e) 
@@ -39,7 +46,7 @@ class Main extends Sprite
 		if (inited) return;
 		inited = true;
 		player = new Player();
-		curLevel = new Level();
+		curLevel = new Level(1);
 		texthandler = new TextHandler();
 		// (your code here)
 		
@@ -62,6 +69,11 @@ class Main extends Sprite
 		stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDown);
 		stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);
 		
+		if (editor) {
+			stage.addEventListener(MouseEvent.MOUSE_DOWN, emd);
+			stage.addEventListener(MouseEvent.MOUSE_MOVE, emm);
+			stage.addEventListener(MouseEvent.MOUSE_UP, emu);
+		}
 	}
 
 	/* SETUP */
@@ -94,7 +106,26 @@ class Main extends Sprite
 	
 	public function keyDown(e:KeyboardEvent):Void {
 		if (e.keyCode == 87) {//w
-			texthandler.removeTextTest(); //Test if removing font works like this
+			if (texthandler.testSwitch == true)
+			{
+				texthandler.removeText(); //Test if removing font works like this
+				texthandler.testSwitch = false;
+			} 
+			else
+			{
+				var textFormat = new TextFormat();
+				textFormat.font = "Warnock";
+				textFormat.color = 0x000000;
+				textFormat.size = 16;
+				
+				var test = new TextField();
+				test.text = "So now you must go and do what is required of you!";
+				test.x = 20;
+				test.y = Lib.current.stage.stageHeight - 40;
+				test.width = 500;
+				test.setTextFormat(textFormat);
+				texthandler.displayText(test);
+			}
 		}
 		else if (e.keyCode == 65) {//a
 			mLeft = true;
@@ -146,7 +177,16 @@ class Main extends Sprite
 		if (Math.abs(curLevel.spriteList.x-player.pos.x)>.1){
 			curLevel.spriteList.x += (player.pos.x - curLevel.spriteList.x)/Math.abs(player.pos.x - curLevel.spriteList.x) *2.5;
 		}
-		
+		curLevel.update(3);
 		player.update(3);
+	}
+	public function emd(e:MouseEvent):Void {
+		
+	}
+	public function emm(e:MouseEvent):Void {
+		
+	}
+	public function emu(e:MouseEvent):Void {
+		
 	}
 }
