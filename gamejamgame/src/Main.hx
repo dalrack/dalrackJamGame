@@ -19,6 +19,9 @@ class Main extends Sprite
 	var player:Player ;
 	var currLevelMap:Bitmap;
 	
+	var mLeft:Bool=false;
+	var mRight:Bool=false;
+	
 	/* ENTRY POINT */
 	
 	function resize(e) 
@@ -40,13 +43,8 @@ class Main extends Sprite
 		// Assets:
 		// nme.Assets.getBitmapData("img/assetname.jpg");
 		
-		
-		
-		
 		var bmp:Bitmap = new Bitmap(Assets.getBitmapData("img/levelback.png"));
 		addChild(currLevelMap=bmp);
-		
-		
 		
 		addChild(player.display);
 		player.display.x = stage.stageWidth / 2 + player.display.width / 2;
@@ -56,6 +54,8 @@ class Main extends Sprite
 		
 		addEventListener(Event.ENTER_FRAME, update);
 		stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDown);
+		stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);
+		
 	}
 
 	/* SETUP */
@@ -91,17 +91,40 @@ class Main extends Sprite
 			
 		}
 		else if (e.keyCode == 65) {//a
-			player.pos.x+=player.movespeed;
+			mLeft = true;
+			//player.pos.x+=player.movespeed;
 		}
 		else if (e.keyCode == 83) {//s
 			
 		}
 		else if (e.keyCode == 68) {//d
-			player.pos.x-=player.movespeed;	
+			mRight = true;
+		//	player.pos.x-=player.movespeed;	
+		}
+	}
+	
+	public function keyUp(e:KeyboardEvent):Void {
+		if (e.keyCode == 87) {//w
+			
+		}
+		else if (e.keyCode == 65) {//a
+			mLeft = false;
+			player.pos.x=currLevelMap.x;
+		}
+		else if (e.keyCode == 83) {//s
+			
+		}
+		else if (e.keyCode == 68) {//d
+			mRight = false;
+			player.pos.x = currLevelMap.x;	
 		}
 	}
 	
 	public function update(e:Event):Void {
+		if (mLeft)
+			player.pos.x += player.movespeed;
+		if (mRight)
+			player.pos.x -= player.movespeed;
 		if (Math.abs(currLevelMap.x-player.pos.x)>.1){
 			currLevelMap.x += (player.pos.x - currLevelMap.x)/Math.abs(player.pos.x - currLevelMap.x) *1.5;
 		}
