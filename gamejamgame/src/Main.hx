@@ -94,7 +94,7 @@ class Main extends Sprite
 	
 	public function keyDown(e:KeyboardEvent):Void {
 		if (e.keyCode == 87) {//w
-			
+			texthandler.removeTextTest(); //Test if removing font works like this
 		}
 		else if (e.keyCode == 65) {//a
 			mLeft = true;
