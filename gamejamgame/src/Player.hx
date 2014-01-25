@@ -18,9 +18,10 @@ class Player
 	private var animLength:Int;
 	public var animStrings:Array<String>;
 	public var currAnim:String;
+	public var currFrame:Int;
 	
 	private static var animSpeed:Int = 30;
-	private var animTTU:Int = animSpeed;
+	private var animTTU:Int = 0;
 	public function new() 
 	{
 		animStrings = new Array<String>();
@@ -43,13 +44,25 @@ class Player
 			}
 		}
 	}
+	
+	public function searchArray(a:Array<String>, s:String):Int {
+		for (i in 0...a.length) {
+			if (a[i] == s) 
+				return i;
+		}
+		return 0;
+	}
+	
 	public function update(tpu:Int):Void {
 		animTTU -= tpu;
 		if (animTTU <= 0) {
-			animStrings.
+			var aIndex = searchArray(animStrings, currAnim);
 			animTTU = animSpeed;
-			var lastFrame:Int=anims[
-			display.bitmapData=anims[][
+			currFrame++;
+			var lastFrame:Int = anims[aIndex].length;
+			if (currFrame >= lastFrame) 
+				currFrame = 0;
+			display.bitmapData = anims[aIndex][currFrame];
 		}
 	}
 	
