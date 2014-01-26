@@ -34,6 +34,7 @@ class DialogueHandler
 	{
 		if (DialoguePosition < DialogueList.length)
 		{
+			Main.getInstance().texthandler.removeText();
 			Main.getInstance().texthandler.displayText(DialogueList[DialoguePosition].text);
 			DialoguePosition++;
 		}
