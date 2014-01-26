@@ -18,15 +18,16 @@ class DialogueHandler
 	public function new() 
 	{
 		DialogueList = new Array<DialogueString>();
-		var dialogueTest1:DialogueString = new DialogueString("This is a test");
+		var dialogueTest1:DialogueString = new DialogueString("This is a story");
 		DialogueList.push(dialogueTest1);
-		dialogueTest1.text.text = "This is also a test";
-		DialogueList.push(dialogueTest1);
-		dialogueTest1.text.text = "This is also a test 3";
-		DialogueList.push(dialogueTest1);
-		dialogueTest1.text.text = "This is also a test 4";
-		DialogueList.push(dialogueTest1);
-		dialogueTest1.text.text = "This is also a test 5";
+		var dialogueTest2:DialogueString = new DialogueString("It is the best story");
+		DialogueList.push(dialogueTest2);
+		var dialogueTest3:DialogueString = new DialogueString("Now story is as good as this story");
+		DialogueList.push(dialogueTest3);
+		var dialogueTest4:DialogueString = new DialogueString("In this story you will go through this story");
+		DialogueList.push(dialogueTest4);
+		var dialogueTest5:DialogueString = new DialogueString("Which is a story");
+		DialogueList.push(dialogueTest5);
 
 	}
 	
@@ -34,7 +35,8 @@ class DialogueHandler
 	{
 		if (DialoguePosition < DialogueList.length)
 		{
-			Main.getInstance().texthandler.displayText(DialogueList[DialoguePosition].text);
+			//Main.getInstance().texthandler.removeText();
+			Main.getInstance().texthandler.textFull[0].text = DialogueList[DialoguePosition].thisisastring;
 			DialoguePosition++;
 		}
 	}
@@ -43,7 +45,7 @@ class DialogueHandler
 class DialogueString
 {
 	public var text:TextField;
-	
+	public var thisisastring:String;
 	public function new(string:String)
 	{
 		text = new TextField();
@@ -52,6 +54,7 @@ class DialogueString
 		textFormat.color = 0x000000; //required text format information
 		textFormat.size = 16; //required text format information
 		text.text = string; //String to be displayed
+		thisisastring = string;
 		text.x = 20; //x position the text will start
 		text.y = Lib.current.stage.stageHeight - 40; //the y position the text will start
 		text.width = 290; //the width for our window

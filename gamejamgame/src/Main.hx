@@ -146,7 +146,7 @@ class Main extends Sprite
 	}
 	public function keyDown(e:KeyboardEvent):Void {
 		if (e.keyCode == 87) {//w
-			texthandler.dialogue.displayNextDialogue();
+
 		}
 		else if (e.keyCode == 65) {//a
 			mLeft = true;
@@ -165,7 +165,7 @@ class Main extends Sprite
 	
 	public function keyUp(e:KeyboardEvent):Void {
 		if (e.keyCode == 87) {//w
-			
+			texthandler.dialogue.displayNextDialogue();
 		}
 		else if (e.keyCode == 65) {//a
 			mLeft = false;
