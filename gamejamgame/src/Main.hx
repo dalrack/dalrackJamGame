@@ -9,6 +9,10 @@ import flash.Lib;
 import openfl.Assets;
 import flash.events.KeyboardEvent;
 import flash.events.MouseEvent;
+import flash.text.TextField;
+import flash.text.TextFieldAutoSize;
+import flash.text.TextFormat;
+import flash.text.TextFieldType;
 /**
  * ...
  * @author jesus
@@ -24,7 +28,13 @@ class Main extends Sprite
 	var mLeft:Bool=false;
 	var mRight:Bool = false;
 	
-	var texthandler:TextHandler;
+	public var texthandler:TextHandler;
+	
+	var editor:Bool = true;
+	
+	var drag:Sprite;
+	var createAnObject:TextField;
+	var createAnObjectSubmit:Sprite;
 	
 	/* ENTRY POINT */
 	
@@ -39,7 +49,7 @@ class Main extends Sprite
 		if (inited) return;
 		inited = true;
 		player = new Player();
-		curLevel = new Level();
+		curLevel = new Level(1);
 		texthandler = new TextHandler();
 		// (your code here)
 		
@@ -62,10 +72,33 @@ class Main extends Sprite
 		stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDown);
 		stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);
 		
+		if (editor) {
+			stage.addEventListener(MouseEvent.MOUSE_DOWN, emd);
+			stage.addEventListener(MouseEvent.MOUSE_MOVE, emm);
+			stage.addEventListener(MouseEvent.MOUSE_UP, emu);
+			
+			
+			createAnObject = new TextField();
+			createAnObject.text = "player";
+			createAnObject.x = 500;
+			createAnObject.selectable = true;
+			createAnObject.type = TextFieldType.INPUT;
+			createAnObject.autoSize = TextFieldAutoSize.LEFT;
+			addChild(createAnObject);
+			createAnObjectSubmit = new Sprite();
+			createAnObjectSubmit.graphics.beginFill(0xff);
+			createAnObjectSubmit.graphics.drawRect(0, 0, 20, 20);
+			createAnObjectSubmit.x = createAnObject.x - createAnObjectSubmit.width - 5;
+			addChild(createAnObjectSubmit);
+			createAnObjectSubmit.addEventListener(MouseEvent.CLICK,createAnObjectClick);
+		}
 	}
 
 	/* SETUP */
-
+	public static var mInstance:Main;
+	public static function getInstance():Main {
+		return mInstance;
+	}
 	public function new() 
 	{
 		super();	
@@ -81,6 +114,7 @@ class Main extends Sprite
 		#else
 		init();
 		#end
+		mInstance = this;
 	}
 	
 	public static function main() 
@@ -94,7 +128,7 @@ class Main extends Sprite
 	
 	public function keyDown(e:KeyboardEvent):Void {
 		if (e.keyCode == 87) {//w
-			texthandler.removeTextTest(); //Test if removing font works like this
+			texthandler.dialogue.displayNextDialogue();
 		}
 		else if (e.keyCode == 65) {//a
 			mLeft = true;
@@ -107,6 +141,11 @@ class Main extends Sprite
 			mRight = true;
 		//	player.pos.x-=player.movespeed;	
 		}
+		else if (e.keyCode == 46) {//delete
+			curLevel.removeEntity(drag);
+			drag = null;
+		}
+		
 	}
 	
 	public function keyUp(e:KeyboardEvent):Void {
@@ -146,7 +185,27 @@ class Main extends Sprite
 		if (Math.abs(curLevel.spriteList.x-player.pos.x)>.1){
 			curLevel.spriteList.x += (player.pos.x - curLevel.spriteList.x)/Math.abs(player.pos.x - curLevel.spriteList.x) *2.5;
 		}
-		
+		curLevel.update(3);
 		player.update(3);
+	}
+	public function emd(e:MouseEvent):Void {
+		if (e.target == createAnObjectSubmit) return;
+		if (Std.is(e.target,Sprite)) {
+			var s:Sprite = cast(e.target, Sprite);
+			trace(s.name);
+			drag = s;
+		}
+	}
+	public function emm(e:MouseEvent):Void {
+		if (drag!=null) {
+			drag.x = e.stageX - drag.width / 2 - curLevel.spriteList.x;
+			drag.y = e.stageY - drag.height / 2-curLevel.spriteList.y;
+		}
+	}
+	public function emu(e:MouseEvent):Void {
+		drag = null;
+	}
+	public function createAnObjectClick(e:MouseEvent):Void {
+		curLevel.addEntity(createAnObject.text);
 	}
 }

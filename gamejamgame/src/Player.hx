@@ -1,6 +1,7 @@
 package ;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
+import flash.display.Sprite;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Transform;
@@ -14,7 +15,8 @@ class Player
 {
 	public var pos:Point;
 	public var movespeed:Float = 4;
-	public var display:Bitmap;
+	public var display:Sprite;
+	public var displayBitmap:Bitmap;
 	public var anims:Array<Array<BitmapData>>;
 	
 	private var animLength:Int;
@@ -50,7 +52,11 @@ class Player
 				else bmpdata = null;
 			}
 		}
-		display=new Bitmap(anims[0][0]);
+		displayBitmap = new Bitmap(anims[0][0]);
+		display = new Sprite();
+		display.addChild(displayBitmap);
+		display.name = "player";
+		setDirection(false);
 	}
 	
 	public function searchArray(a:Array<String>, s:String):Int {
@@ -70,17 +76,17 @@ class Player
 			var lastFrame:Int = anims[aIndex].length;
 			if (currFrame >= lastFrame) 
 				currFrame = 0;
-			display.bitmapData = anims[aIndex][currFrame];
+			displayBitmap.bitmapData = anims[aIndex][currFrame];
 		}
 	}
 	public function setDirection(left:Bool):Void {
 		var t:Transform = display.transform;	
 		if (left) {
-			t.matrix = new Matrix( -1, 0, 0, 1,  screenOff.x+display.width / 2, t.matrix.ty);
+			t.matrix = new Matrix( -1, 0, 0, 1,  screenOff.x+displayBitmap.width / 2, t.matrix.ty);
 			
 		}
 		else {
-			t.matrix = new Matrix( 1, 0, 0, 1, screenOff.x-display.width/2 , t.matrix.ty);
+			t.matrix = new Matrix( 1, 0, 0, 1, screenOff.x-displayBitmap.width/2 , t.matrix.ty);
 		}
 		
 	}
