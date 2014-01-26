@@ -21,6 +21,8 @@
 	<icon path="assets/openfl.svg" />
 	<assets path="assets/img" rename="img" />
 	<assets path="assets/levels" rename="levels" />
+	<assets path="assets" rename="base" />
+	
 	
 	
 	<!-- optimize output

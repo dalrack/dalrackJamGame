@@ -1,6 +1,7 @@
 package ;
 import flash.display.Bitmap;
 import flash.display.Sprite;
+import flash.geom.Point;
 import openfl.Assets;
 import haxe.Json;
 #if windows
@@ -17,13 +18,19 @@ class Level
 	public var currLevelMap:Bitmap;
 	
 	public var animatable:Array<Player>;
-	
+	public var levelGradients:Array<Bitmap>;
 	public function new(number:Int) 
 	{
 		
 		spriteList = new Sprite();
 		var bmp:Bitmap = new Bitmap(Assets.getBitmapData("img/levelback"+number+".png"));
 		spriteList.addChild(currLevelMap = bmp);
+		levelGradients = new Array<Bitmap>();
+		for (i in 0...DialogFactory.totalProgress) {
+			var bmp2:Bitmap = new Bitmap(Assets.getBitmapData("img/levelback" + number +"_"+i+ ".png"));
+			levelGradients.push(bmp2);
+		}
+		
 		animatable = new Array<Player>();
 		var saved:String = Assets.getText("levels/level" + number + ".js");
 		var t:Dynamic = Json.parse(saved);
@@ -38,6 +45,30 @@ class Level
 			}
 		}catch(e:String){}
 	}
+	
+	public function findNearest(source:Point):Player {
+		var realPlayerPos:Float=Math.abs(source.x-400+20);
+		var farthest:Float = 99999999;
+		var farthestPlayer:Player=null;
+		for (player in animatable) {
+			if (Math.abs(realPlayerPos - player.display.x) < farthest) {
+				farthest = Math.abs(realPlayerPos - player.display.x);
+				farthestPlayer = player;
+			}
+		}
+		if (farthest<200)
+			return farthestPlayer;
+		return null;
+	}
+	public function findElevator():Player {
+		for (player in animatable) {
+			if (player.animGroup == "elevator") {
+				return player;
+			}
+		}
+		return null;
+	}
+	
 	public function update(tpu:Int):Void {
 		for (i in animatable) {
 			i.update(tpu);

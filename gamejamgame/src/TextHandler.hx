@@ -24,7 +24,7 @@ class TextHandler
 		dialogue = new DialogueHandler(); //This breaks shit, I don't konw why
 		
 		
-		
+		/*
 		var textFormat = new TextFormat();
 		textFormat.font = "Warnock"; //required text format information
 		textFormat.color = 0x000000; //required text format information
@@ -38,7 +38,7 @@ class TextHandler
 		textFull.push(text); //push the current text block into the array
 		
 		Lib.current.stage.addChild(textFull[0]); //add the text to the stage 
-		
+		*/
 	}
 	
 	public function removeText()
@@ -50,6 +50,6 @@ class TextHandler
 	public function displayText(inputText:TextField)
 	{
 		textFull.push(inputText);
-		Lib.current.stage.addChild(textFull[0]);
+		Lib.current.stage.addChild(inputText);
 	}
 }

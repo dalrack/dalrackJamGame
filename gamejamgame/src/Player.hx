@@ -55,7 +55,9 @@ class Player
 		for (i in 0...animStrings.length) {
 			anims.push(new Array<BitmapData>());
 			var j:Int = 0;
-			var bmpdata:BitmapData = Assets.getBitmapData("img/"+animGroup+"/"+animStrings[i]+"_"+0+".png");
+			var bmpdata:BitmapData=null ;
+			if (Assets.exists("img/"+animGroup+"/"+animStrings[i]+"_"+0+".png",AssetType.IMAGE))
+				bmpdata = Assets.getBitmapData("img/"+animGroup+"/"+animStrings[i]+"_"+0+".png");
 			while (bmpdata!=null) {
 				anims[i].push(bmpdata);
 				j++;
@@ -74,7 +76,7 @@ class Player
 	public function loadFromJson(pj:Dynamic):Void {
 		pos.x = pj.posx;
 		pos.y = pj.posy;
-		trace(pos.x);
+	//	trace(pos.x);
 		animGroup = pj.animGroup;
 		if (animGroup != null) {
 			setAnimGroup(animGroup);

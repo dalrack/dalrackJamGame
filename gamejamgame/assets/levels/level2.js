@@ -1,1 +1,1 @@
-[{"animState":"stand","posy":136,"posx":187}]
+[{"animGroup":"player","animState":"stand","posy":185,"posx":356},{"animGroup":"player","animState":"stand","posy":124,"posx":684},{"animGroup":"elevator","animState":"stand","posy":85.5,"posx":1122}]

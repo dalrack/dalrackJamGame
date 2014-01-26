@@ -4,6 +4,7 @@ import flash.display.Bitmap;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.geom.Matrix;
+import flash.geom.Point;
 import flash.geom.Transform;
 import flash.Lib;
 import openfl.Assets;
@@ -37,6 +38,7 @@ class Main extends Sprite
 	var createAnObjectSubmit:Sprite;
 	
 	/* ENTRY POINT */
+	static var globalDialog:DialogFactory;
 	
 	function resize(e) 
 	{
@@ -44,12 +46,29 @@ class Main extends Sprite
 		// else (resize or orientation change)
 	}
 	
+	function changeLevel(number:Int):Void {
+		if (player != null) removeChild(player.display);
+		if (curLevel != null) removeChild(curLevel.spriteList);
+		player = new Player("player");
+		curLevel = new Level(1);
+		addChild(curLevel.spriteList);
+		addChild(player.display);
+		
+		player.display.x = stage.stageWidth / 2 + player.display.width / 2;
+		player.display.y = stage.stageHeight - player.display.height-20;
+		player.screenOff.x = player.display.x;
+		player.screenOff.y = player.display.y;
+		player.setDirection(false);
+		var elevator:Player=curLevel.findElevator();
+		curLevel.spriteList.x = -elevator.display.x+stage.stageWidth / 2 - player.display.width / 2;
+		player.pos.x = curLevel.spriteList.x;
+	}
+	
 	function init() 
 	{
 		if (inited) return;
 		inited = true;
-		player = new Player("player");
-		curLevel = new Level(1);
+		
 		texthandler = new TextHandler();
 		// (your code here)
 		
@@ -58,15 +77,7 @@ class Main extends Sprite
 		
 		// Assets:
 		// nme.Assets.getBitmapData("img/assetname.jpg");
-		
-		addChild(curLevel.spriteList);
-		
-		addChild(player.display);
-		player.display.x = stage.stageWidth / 2 + player.display.width / 2;
-		player.display.y = stage.stageHeight - player.display.height-20;
-		player.screenOff.x = player.display.x;
-		player.screenOff.y = player.display.y;
-		player.setDirection(false);
+		changeLevel(1);
 		
 		addEventListener(Event.ENTER_FRAME, update);
 		stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDown);
@@ -76,7 +87,6 @@ class Main extends Sprite
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, emd);
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, emm);
 			stage.addEventListener(MouseEvent.MOUSE_UP, emu);
-			
 			
 			createAnObject = new TextField();
 			createAnObject.text = "player";
@@ -118,13 +128,14 @@ class Main extends Sprite
 		mInstance = this;
 	}
 	
+	
 	public static function main() 
 	{
 		// static entry point
+		globalDialog = new DialogFactory();
 		Lib.current.stage.align = flash.display.StageAlign.TOP_LEFT;
 		Lib.current.stage.scaleMode = flash.display.StageScaleMode.NO_SCALE;
 		Lib.current.addChild(new Main());
-		
 	}
 	
 	public function editorKeys(e:KeyboardEvent):Void {
@@ -146,7 +157,7 @@ class Main extends Sprite
 	}
 	public function keyDown(e:KeyboardEvent):Void {
 		if (e.keyCode == 87) {//w
-
+			texthandler.dialogue.displayNextDialogue();
 		}
 		else if (e.keyCode == 65) {//a
 			mLeft = true;
@@ -159,13 +170,24 @@ class Main extends Sprite
 			mRight = true;
 		//	player.pos.x-=player.movespeed;	
 		}
-		
-		
+		else if (e.keyCode == 32) {
+			var pl:Player=curLevel.findNearest(new Point(curLevel.spriteList.x));
+			var realPlayerPos:Float = Math.abs(curLevel.spriteList.x - 400 + 20);
+			if (pl!=null){
+				var eq:Float = Math.abs(realPlayerPos - pl.display.x);
+				if (pl.animGroup == "elevator") {
+					trace(pl);
+				}
+				else if (pl.animGroup == "npc1") {
+					trace(globalDialog.getdialog(pl.animGroup));
+				}
+			}
+		}
 	}
 	
 	public function keyUp(e:KeyboardEvent):Void {
 		if (e.keyCode == 87) {//w
-			texthandler.dialogue.displayNextDialogue();
+			
 		}
 		else if (e.keyCode == 65) {//a
 			mLeft = false;
@@ -180,6 +202,9 @@ class Main extends Sprite
 			player.pos.x = curLevel.spriteList.x;	
 			player.currAnim="stand";
 		}
+	}
+	public function addLevel():Void {
+		
 	}
 	
 	public function update(e:Event):Void {
