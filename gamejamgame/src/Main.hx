@@ -28,7 +28,7 @@ class Main extends Sprite
 	var mLeft:Bool=false;
 	var mRight:Bool = false;
 	
-	var texthandler:TextHandler;
+	public var texthandler:TextHandler;
 	
 	var editor:Bool = true;
 	
@@ -95,7 +95,10 @@ class Main extends Sprite
 	}
 
 	/* SETUP */
-
+	public static var mInstance:Main;
+	public static function getInstance():Main {
+		return mInstance;
+	}
 	public function new() 
 	{
 		super();	
@@ -111,6 +114,7 @@ class Main extends Sprite
 		#else
 		init();
 		#end
+		mInstance = this;
 	}
 	
 	public static function main() 

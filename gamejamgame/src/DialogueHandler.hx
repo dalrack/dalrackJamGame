@@ -10,14 +10,13 @@ import flash.text.TextFormat;
  * @author Zachary Wade
  */
 
-class DialogueHandler extends TextHandler
+class DialogueHandler
 {
 	public var DialogueList:Array<DialogueString>;
 	public var DialoguePosition:Int = 0;
 	//private var textHandler:TextHandler;
 	public function new() 
 	{
-		super();
 		DialogueList = new Array<DialogueString>();
 		var dialogueTest1:DialogueString = new DialogueString("This is a test");
 		DialogueList.push(dialogueTest1);
@@ -35,7 +34,7 @@ class DialogueHandler extends TextHandler
 	{
 		if (DialoguePosition < DialogueList.length)
 		{
-			displayText(DialogueList[DialoguePosition].text);
+			Main.getInstance().texthandler.displayText(DialogueList[DialoguePosition].text);
 			DialoguePosition++;
 		}
 	}

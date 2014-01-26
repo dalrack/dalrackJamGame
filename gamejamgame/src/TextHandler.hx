@@ -10,7 +10,7 @@ import flash.text.TextFormat;
  * @author Zachary Wade
  */
 
-class TextHandler extends Main
+class TextHandler
 {
 	public var textFull:Array<TextField>; //Array of strings, each string should only be a word for the sentence.
 	public var textCurrent:Array<TextField>;
@@ -20,7 +20,6 @@ class TextHandler extends Main
 	
 	public function new() 
 	{
-		super();
 		textFull = new Array<TextField>();
 		dialogue = new DialogueHandler(); //This breaks shit, I don't konw why
 		
