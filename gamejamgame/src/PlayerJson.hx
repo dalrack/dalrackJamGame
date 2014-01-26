@@ -7,14 +7,20 @@ import flash.geom.Point;
  */
 class PlayerJson
 {
-	var posx:Float;
-	var posy:Float;
-	var animState:String;
-	public function new(player:Player) 
+	public var posx:Float;
+	public var posy:Float;
+	public var animState:String;
+	public var animGroup:String;
+	//see level:new and duplicate modifications and player.loadJson
+	//this was a pretty big mistake to use this because I can't find a clean way to deserialize.
+	public function new(player:Player=null) 
 	{
-		posx = player.display.x;
-		posy=player.display.y;
-		animState = player.currAnim;
+		if (player!=null){
+			posx = player.display.x;
+			posy=player.display.y;
+			animState = player.currAnim;
+			animGroup = player.animGroup;
+		}
 	}
 	
 }

@@ -48,7 +48,7 @@ class Main extends Sprite
 	{
 		if (inited) return;
 		inited = true;
-		player = new Player();
+		player = new Player("player");
 		curLevel = new Level(1);
 		texthandler = new TextHandler();
 		// (your code here)
@@ -90,7 +90,8 @@ class Main extends Sprite
 			createAnObjectSubmit.graphics.drawRect(0, 0, 20, 20);
 			createAnObjectSubmit.x = createAnObject.x - createAnObjectSubmit.width - 5;
 			addChild(createAnObjectSubmit);
-			createAnObjectSubmit.addEventListener(MouseEvent.CLICK,createAnObjectClick);
+			createAnObjectSubmit.addEventListener(MouseEvent.CLICK, createAnObjectClick);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN,editorKeys);
 		}
 	}
 
@@ -126,6 +127,23 @@ class Main extends Sprite
 		
 	}
 	
+	public function editorKeys(e:KeyboardEvent):Void {
+	//	trace(e.keyCode);
+		if (e.keyCode == 187) {//+
+			var p:Player=curLevel.findEntity(drag);
+			p.setDirection(!p.facing);
+		}
+		else if (e.keyCode == 46) {//delete
+			curLevel.removeEntity(drag);
+			drag = null;
+		}
+		#if windows
+		else if (e.keyCode >=48 && e.keyCode<=58 ) {
+			var level:Int = e.keyCode-48;
+			curLevel.save(true,level);
+		}
+		#end
+	}
 	public function keyDown(e:KeyboardEvent):Void {
 		if (e.keyCode == 87) {//w
 			texthandler.dialogue.displayNextDialogue();
@@ -141,10 +159,7 @@ class Main extends Sprite
 			mRight = true;
 		//	player.pos.x-=player.movespeed;	
 		}
-		else if (e.keyCode == 46) {//delete
-			curLevel.removeEntity(drag);
-			drag = null;
-		}
+		
 		
 	}
 	
@@ -192,7 +207,7 @@ class Main extends Sprite
 		if (e.target == createAnObjectSubmit) return;
 		if (Std.is(e.target,Sprite)) {
 			var s:Sprite = cast(e.target, Sprite);
-			trace(s.name);
+		//	trace(s.name);
 			drag = s;
 		}
 	}
@@ -206,6 +221,6 @@ class Main extends Sprite
 		drag = null;
 	}
 	public function createAnObjectClick(e:MouseEvent):Void {
-		curLevel.addEntity(createAnObject.text);
+		curLevel.addEntity(createAnObject.text,-curLevel.spriteList.x);
 	}
 }

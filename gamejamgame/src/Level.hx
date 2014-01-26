@@ -24,25 +24,42 @@ class Level
 		spriteList = new Sprite();
 		var bmp:Bitmap = new Bitmap(Assets.getBitmapData("img/levelback"+number+".png"));
 		spriteList.addChild(currLevelMap = bmp);
-		
 		animatable = new Array<Player>();
-		animatable.push(new Player());
-		animatable.push(new Player());
-		animatable[0].display.x = 131;
-		animatable[0].display.y = 140;
-		spriteList.addChild(animatable[0].display);
+		var saved:String = Assets.getText("levels/level" + number + ".js");
+		var t:Dynamic = Json.parse(saved);
+		try {
+			var i:Int=0;
+			while (true) {
+				var pp:Player;
+				if (t[i] == null) break;
+				animatable.push(pp=new Player());
+				pp.loadFromJson(t[i++]);
+				spriteList.addChild(pp.display);
+			}
+		}catch(e:String){}
 	}
 	public function update(tpu:Int):Void {
 		for (i in animatable) {
 			i.update(tpu);
 		}
 	}
-	public function addEntity(name:String):Void {
+	public function addEntity(name:String, x:Float):Void {
 		animatable.push(new Player(name));
 		spriteList.addChild(animatable[animatable.length - 1].display);
+		animatable[animatable.length - 1].display.x = x;
+	}
+	public function findEntity(s:Sprite):Player {
+		for (i in animatable) {
+			if (s == i.display) {
+				return i;
+			}
+		}
+		return null;
 	}
 	public function removeEntity(s:Sprite):Void {
-		//get to this later
+		var p:Player = findEntity(s);
+		animatable.remove(p);
+		spriteList.removeChild(s);
 	}
 	/*
 	public function save():String {
@@ -56,27 +73,31 @@ class Level
 	}
 	*/
 	#if windows
-	public function save(overwrite:Bool=true):Void {
+	public function save(overwrite:Bool=true,levelFile:Int):Void {
 		var filename:String = "level";
 		var directory:String = "../../../../assets/levels";
 		if (!FileSystem.exists(directory)){
 			FileSystem.createDirectory(directory);
 		}
-		var number:Int = 1;
+		var number:Int = levelFile;
 		directory += "/";
 		if (FileSystem.exists(directory + filename + ".js")){
 			while(FileSystem.exists(directory + filename + number +".js"))
 				number++;
 		}
 		if (overwrite)
-			number = 1;
+			number = levelFile;
 		filename = filename + number;
 		File.write(directory + filename + ".js", false);
-		var json:String = "";
+		var json:String = "[";
+		var apj:Array<PlayerJson> = new Array<PlayerJson>();
 		for (i in animatable) {
 			var pj:PlayerJson = new PlayerJson(i);
 			json += Json.stringify(pj);
+			apj.push(pj);
 		}
+		json += "]";
+		json = Json.stringify(apj);
 		File.saveContent(directory + filename + ".js", json);
 	}
 	/*

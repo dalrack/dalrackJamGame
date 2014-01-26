@@ -1,0 +1,1 @@
+[{"animState":"stand","posy":68,"posx":120},{"animState":"stand","posy":66,"posx":392}]

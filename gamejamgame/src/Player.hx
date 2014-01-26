@@ -19,26 +19,39 @@ class Player
 	public var displayBitmap:Bitmap;
 	public var anims:Array<Array<BitmapData>>;
 	
+	public var animGroup:String;
 	private var animLength:Int;
 	public var animStrings:Array<String>;
 	public var currAnim:String;
 	public var currFrame:Int;
 	
+	public var facing:Bool = false;
+	
 	private static var animSpeed:Int = 30;
 	private var animTTU:Int = 0;
 	
 	public var screenOff:Point;
-	public function new(animGroup:String="player") 
+	public function new(animGroup:String=null) 
 	{
+		this.animGroup = animGroup;
 		screenOff = new Point();
 		animStrings = new Array<String>();
 		animStrings.push("walk");
 		animStrings.push("stand");
 		currAnim = "stand";
 		
-		
 		pos = new Point();
+		
+		display = new Sprite();
+		if (animGroup != null) {
+			setAnimGroup(animGroup);
+		}
+		
+		
+	}
+	public function setAnimGroup(group:String):Void {
 		anims = new Array<Array<BitmapData>>();
+		
 		for (i in 0...animStrings.length) {
 			anims.push(new Array<BitmapData>());
 			var j:Int = 0;
@@ -52,13 +65,24 @@ class Player
 				else bmpdata = null;
 			}
 		}
+		
+		
 		displayBitmap = new Bitmap(anims[0][0]);
-		display = new Sprite();
-		display.addChild(displayBitmap);
-		display.name = "player";
 		setDirection(false);
+		display.addChild(displayBitmap);
 	}
-	
+	public function loadFromJson(pj:Dynamic):Void {
+		pos.x = pj.posx;
+		pos.y = pj.posy;
+		trace(pos.x);
+		animGroup = pj.animGroup;
+		if (animGroup != null) {
+			setAnimGroup(animGroup);
+		}
+		currAnim = pj.animState;
+		display.x = pos.x;
+		display.y = pos.y;
+	}
 	public function searchArray(a:Array<String>, s:String):Int {
 		for (i in 0...a.length) {
 			if (a[i] == s) 
@@ -82,11 +106,12 @@ class Player
 	public function setDirection(left:Bool):Void {
 		var t:Transform = display.transform;	
 		if (left) {
-			t.matrix = new Matrix( -1, 0, 0, 1,  screenOff.x+displayBitmap.width / 2, t.matrix.ty);
-			
+			t.matrix = new Matrix( -1, 0, 0, 1,  screenOff.x + displayBitmap.width / 2, t.matrix.ty);
+			facing = true;
 		}
 		else {
-			t.matrix = new Matrix( 1, 0, 0, 1, screenOff.x-displayBitmap.width/2 , t.matrix.ty);
+			t.matrix = new Matrix( 1, 0, 0, 1, screenOff.x - displayBitmap.width / 2 , t.matrix.ty);
+			facing = false;
 		}
 		
 	}
