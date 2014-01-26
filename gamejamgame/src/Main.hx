@@ -124,26 +124,7 @@ class Main extends Sprite
 	
 	public function keyDown(e:KeyboardEvent):Void {
 		if (e.keyCode == 87) {//w
-			if (texthandler.testSwitch == true)
-			{
-				texthandler.removeText(); //Test if removing font works like this
-				texthandler.testSwitch = false;
-			} 
-			else
-			{
-				var textFormat = new TextFormat();
-				textFormat.font = "Warnock";
-				textFormat.color = 0x000000;
-				textFormat.size = 16;
-				
-				var test = new TextField();
-				test.text = "So now you must go and do what is required of you!";
-				test.x = 20;
-				test.y = Lib.current.stage.stageHeight - 40;
-				test.width = 500;
-				test.setTextFormat(textFormat);
-				texthandler.displayText(test);
-			}
+			texthandler.dialogue.displayNextDialogue();
 		}
 		else if (e.keyCode == 65) {//a
 			mLeft = true;
