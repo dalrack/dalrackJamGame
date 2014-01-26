@@ -55,6 +55,8 @@ class Player
 		displayBitmap = new Bitmap(anims[0][0]);
 		display = new Sprite();
 		display.addChild(displayBitmap);
+		display.name = "player";
+		setDirection(false);
 	}
 	
 	public function searchArray(a:Array<String>, s:String):Int {
@@ -78,7 +80,7 @@ class Player
 		}
 	}
 	public function setDirection(left:Bool):Void {
-		var t:Transform = displayBitmap.transform;	
+		var t:Transform = display.transform;	
 		if (left) {
 			t.matrix = new Matrix( -1, 0, 0, 1,  screenOff.x+displayBitmap.width / 2, t.matrix.ty);
 			

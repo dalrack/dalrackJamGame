@@ -28,13 +28,21 @@ class Level
 		animatable = new Array<Player>();
 		animatable.push(new Player());
 		animatable.push(new Player());
-		animatable[0].display.x = 160;
-		animatable[0].display.y = 300;
+		animatable[0].display.x = 131;
+		animatable[0].display.y = 140;
+		spriteList.addChild(animatable[0].display);
 	}
 	public function update(tpu:Int):Void {
 		for (i in animatable) {
 			i.update(tpu);
 		}
+	}
+	public function addEntity(name:String):Void {
+		animatable.push(new Player(name));
+		spriteList.addChild(animatable[animatable.length - 1].display);
+	}
+	public function removeEntity(s:Sprite):Void {
+		//get to this later
 	}
 	/*
 	public function save():String {

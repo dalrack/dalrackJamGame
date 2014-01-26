@@ -12,6 +12,7 @@ import flash.events.MouseEvent;
 import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
+import flash.text.TextFieldType;
 /**
  * ...
  * @author jesus
@@ -32,6 +33,8 @@ class Main extends Sprite
 	var editor:Bool = true;
 	
 	var drag:Sprite;
+	var createAnObject:TextField;
+	var createAnObjectSubmit:Sprite;
 	
 	/* ENTRY POINT */
 	
@@ -73,6 +76,21 @@ class Main extends Sprite
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, emd);
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, emm);
 			stage.addEventListener(MouseEvent.MOUSE_UP, emu);
+			
+			
+			createAnObject = new TextField();
+			createAnObject.text = "player";
+			createAnObject.x = 500;
+			createAnObject.selectable = true;
+			createAnObject.type = TextFieldType.INPUT;
+			createAnObject.autoSize = TextFieldAutoSize.LEFT;
+			addChild(createAnObject);
+			createAnObjectSubmit = new Sprite();
+			createAnObjectSubmit.graphics.beginFill(0xff);
+			createAnObjectSubmit.graphics.drawRect(0, 0, 20, 20);
+			createAnObjectSubmit.x = createAnObject.x - createAnObjectSubmit.width - 5;
+			addChild(createAnObjectSubmit);
+			createAnObjectSubmit.addEventListener(MouseEvent.CLICK,createAnObjectClick);
 		}
 	}
 
@@ -138,6 +156,11 @@ class Main extends Sprite
 			mRight = true;
 		//	player.pos.x-=player.movespeed;	
 		}
+		else if (e.keyCode == 46) {//delete
+			curLevel.removeEntity(drag);
+			drag = null;
+		}
+		
 	}
 	
 	public function keyUp(e:KeyboardEvent):Void {
@@ -181,12 +204,23 @@ class Main extends Sprite
 		player.update(3);
 	}
 	public function emd(e:MouseEvent):Void {
-		
+		if (e.target == createAnObjectSubmit) return;
+		if (Std.is(e.target,Sprite)) {
+			var s:Sprite = cast(e.target, Sprite);
+			trace(s.name);
+			drag = s;
+		}
 	}
 	public function emm(e:MouseEvent):Void {
-		
+		if (drag!=null) {
+			drag.x = e.stageX - drag.width / 2 - curLevel.spriteList.x;
+			drag.y = e.stageY - drag.height / 2-curLevel.spriteList.y;
+		}
 	}
 	public function emu(e:MouseEvent):Void {
-		
+		drag = null;
+	}
+	public function createAnObjectClick(e:MouseEvent):Void {
+		curLevel.addEntity(createAnObject.text);
 	}
 }
