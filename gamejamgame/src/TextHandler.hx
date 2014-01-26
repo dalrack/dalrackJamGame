@@ -50,6 +50,6 @@ class TextHandler
 	public function displayText(inputText:TextField)
 	{
 		textFull.push(inputText);
-		Lib.current.stage.addChild(inputText);
+		Lib.current.stage.addChild(textFull[0]);
 	}
 }
